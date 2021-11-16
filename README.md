@@ -17,6 +17,8 @@
 - to be taken
   - tabulka statistik
   - výpočet kalorií
+  - (demonstrační/fasádní klient)
+  - ((šelový skriptík))
 
 
 
