@@ -1,6 +1,7 @@
 package org.acme;
 
 import io.quarkus.oidc.IdToken;
+import io.quarkus.panache.common.Parameters;
 import org.bson.types.ObjectId;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
@@ -66,17 +67,9 @@ public class WorkoutPlanResource {
 
     @GET
     @Path("/search/{name}")
-    public WorkoutPlan search(@PathParam("name") String name) {
-        try {
-            WorkoutPlan wp = WorkoutPlan.findByName(name);
-            if (wp != null && wp.userName.equals(idToken.getName())) {
-                return wp;
-            } else {
-                throw new NotFoundException(String.format("You do not have workout plan with name %s", name));
-            }
-        } catch(IllegalArgumentException e) {
-            throw new NotFoundException(String.format("You do not have workout plan with name %s", name), e);
-        }
+    public List<WorkoutPlan> search(@PathParam("name") String name) {
+        return WorkoutPlan.list("name like :name", Parameters.with("name", "%" + name + "%"));
+
     }
 
     @GET
