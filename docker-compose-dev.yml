@@ -10,7 +10,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=pass
     volumes:
-      - ${HOME}/postgres-data/:/var/lib/postgresql/data:Z
+      - ./postgres-data/:/var/lib/postgresql/data:Z
 
   keycloak:
     image: quay.io/keycloak/keycloak:15.0.2
