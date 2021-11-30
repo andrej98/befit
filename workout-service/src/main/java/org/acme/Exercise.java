@@ -1,15 +1,19 @@
 package org.acme;
 
+import org.acme.enums.AmountType;
+
 public class Exercise {
     public String name;
     public String description;
-    public int reps;
+    public Integer amount;
+    public AmountType amountType;
 
     public Exercise() {}
 
-    public Exercise(String name, String description, int reps) {
+    public Exercise(String name, String description, Integer amount, AmountType amountType) {
         this.name = name;
         this.description = description;
-        this.reps = reps;
+        this.amount = amount;
+        this.amountType = amountType;
     }
 }

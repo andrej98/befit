@@ -28,6 +28,12 @@ public class WorkoutPlanResource {
     @POST
     public Response create(WorkoutPlan plan) {
         plan.userName = idToken.getName();
+        List<WorkoutPlan> allFromUser = WorkoutPlan.getAllFromUser(idToken.getName());
+
+        //check if user has any plan with same name
+        if (allFromUser.stream().filter(rec -> rec.name.equals(plan.name)).findFirst().isPresent()){
+            throw new BadRequestException(String.format("User %s already has workout plan with name %s", idToken.getName(), plan.name));
+        }
         plan.persist();
         return Response.created(URI.create("/workout-plans/" + plan.id)).build();
     }
@@ -52,7 +58,7 @@ public class WorkoutPlanResource {
 
     @DELETE
     @Path("/{id}")
-    public void delete(@PathParam("id") String id) {
+    public Response delete(@PathParam("id") String id) {
         try {
             WorkoutPlan wp = WorkoutPlan.findById(new ObjectId(id));
             if (wp != null && wp.userName.equals(idToken.getName())) {
@@ -63,13 +69,15 @@ public class WorkoutPlanResource {
         } catch(IllegalArgumentException e) {
             throw new NotFoundException(String.format("You do not have workout plan with id %s", id),e);
         }
+        return Response.ok().build();
     }
 
     @GET
     @Path("/search/{name}")
     public List<WorkoutPlan> search(@PathParam("name") String name) {
-        return WorkoutPlan.list("name like :name", Parameters.with("name", "%" + name + "%"));
-
+        System.out.println(name+ " "+idToken.getName());
+        name=name.toLowerCase();
+        return WorkoutPlan.list("name = :name and userName = :userName", Parameters.with("name", name).and("userName", idToken.getName()).map());
     }
 
     @GET

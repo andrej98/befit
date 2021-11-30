@@ -12,6 +12,15 @@ services:
     volumes:
       - ./postgres-data/:/var/lib/postgresql/data:Z
 
+  mongo:
+    image: mongo:5.0.3
+    container_name: mongo
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+
   keycloak:
     image: quay.io/keycloak/keycloak:15.0.2
     container_name: keycloak
