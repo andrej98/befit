@@ -6,7 +6,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("/hello")
-public class notification {
+public class Notification {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
