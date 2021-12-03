@@ -1,4 +1,9 @@
-#Maven
+# testing stuff
+/.apt_generated
+/.apt_generated_tests
+/start.sh
+
+# Maven
 target/
 pom.xml.tag
 pom.xml.releaseBackup

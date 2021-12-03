@@ -14,7 +14,8 @@ public class EmailResource
     Mailer mailer;
 
     @Blocking
-    public void sendEmail(String address, String exerciseName) {
+    public void sendEmail(String address, String exerciseName)
+    {
         mailer.send(Mail
             .withText(address,
                     "Befit exercise notification",
