@@ -6,11 +6,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("/hello")
-public class Notification {
-
+public class Notification
+{
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String hello() {
+    public String hello()
+    {
         return "Hello RESTEasy";
     }
 }
