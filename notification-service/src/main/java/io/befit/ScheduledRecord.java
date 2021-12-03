@@ -1,15 +1,24 @@
 package io.befit;
 
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
+import javax.persistence.Entity;
 
-public class ScheduledRecord {
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
-    public String userName;
+@Entity
+public class ScheduledRecord extends PanacheEntity
+{
+    public String email;
 
     public String exerciseName;
 
-    @DecimalMin(value = "0")
-    @DecimalMax(value = "23")
-    public int time;
+    public int hour;
+
+    public int minute;
+
+    @Override
+    public String toString()
+    {
+        return "ScheduledRecord{ " + email + ": " + exerciseName +
+                ": (" + hour + ":" + minute + ") }";
+    }
 }
