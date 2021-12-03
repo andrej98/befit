@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
@@ -96,7 +97,7 @@ public class RecordResource {
             records = records.filter(r -> r.date.isBefore(to) || r.date.isEqual(to));
         }
 
-        return records.toList();
+        return records.collect(Collectors.toList());
     }
 
 
