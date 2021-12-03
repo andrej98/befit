@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+
+  notification-service:
+    build:
+      context: notification-service/
+      dockerfile: src/main/docker/Dockerfile.jvm
+    environment:
+      - BEFIT_MOCK_EMAIL=true  # change this to false if you want to be able to actually use the email and send messages
+      - QUARKUS_MAILER_FROM=${BEFIT_EMAIL_USER}
+      - QUARKUS_MAILER_USERNAME=${BEFIT_EMAIL_USER}
+      - QUARKUS_MAILER_PASSWORD=${BEFIT_EMAIL_PASSWORD}
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+
+  record-service:
+    build:
+      context: record-service/
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+
+  workout-service:
+    build:
+      context: workout-service/
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14.0
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=pass
+    volumes:
+      - ./postgres-data/:/var/lib/postgresql/data:Z
+
+  mongo:
+    image: mongo:5.0.3
+    container_name: mongo
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:15.0.2
+    container_name: keycloak
+    ports:
+      - "8180:8180"
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/tmp/quarkus-realm.json
+      - DB_VENDOR=POSTGRES
+      - DB_ADDR=postgres
+      - DB_DATABASE=postgres
+      - DB_USER=postgres
+      - DB_SCHEMA=public
+      - DB_PASSWORD=pass
+      - JAVA_OPTS="-Djboss.socket.binding.port-offset=100"
+    volumes:
+      - ./quarkus-realm.json:/tmp/quarkus-realm.json:Z
