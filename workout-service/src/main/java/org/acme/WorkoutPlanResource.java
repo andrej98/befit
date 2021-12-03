@@ -20,7 +20,6 @@ public class WorkoutPlanResource {
     JsonWebToken idToken;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public List<WorkoutPlan> getAll() {
         return WorkoutPlan.getAllFromUser(idToken.getName());
     }
@@ -30,37 +29,44 @@ public class WorkoutPlanResource {
         plan.userName = idToken.getName();
         List<WorkoutPlan> allFromUser = WorkoutPlan.getAllFromUser(idToken.getName());
 
-        //check if user has any plan with same name
+        //check if user has any plan with the same name
         if (allFromUser.stream().filter(rec -> rec.name.equals(plan.name)).findFirst().isPresent()){
             throw new BadRequestException(String.format("User %s already has workout plan with name %s", idToken.getName(), plan.name));
         }
         plan.persist();
-        return Response.created(URI.create("/workout-plans/" + plan.id)).build();
+
+        WorkoutPlan createdPlan = WorkoutPlan.findByName(plan.name);
+
+        return Response.status(Response.Status.CREATED).entity(createdPlan).build();
     }
 
     @PUT
     @Path("/{id}")
-    public void update(@PathParam("id") String id, WorkoutPlan plan) throws Exception {
+    public Response update(@PathParam("id") String id, WorkoutPlan plan) {
         try{
             WorkoutPlan wp = WorkoutPlan.findById(new ObjectId(id));
-
             if(plan != null && wp.userName.equals(idToken.getName())){
-                plan.userName = idToken.getName();
-                plan.update();
+                wp.userName = idToken.getName();
+                wp.name = plan.name;
+                wp.exercises = plan.exercises;
+                wp.frequency = plan.frequency;
+                wp.update();
             } else{
                 throw new NotFoundException(String.format("You do not have workout plan with id %s", id));
             }
         } catch(IllegalArgumentException e){
             throw new NotFoundException(String.format("You do not have workout plan with id %s", id), e);
         }
-
+        WorkoutPlan updatedPlan = WorkoutPlan.findByName(plan.name);
+        return Response.status(Response.Status.OK).entity(updatedPlan).build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") String id) {
+        WorkoutPlan wp;
         try {
-            WorkoutPlan wp = WorkoutPlan.findById(new ObjectId(id));
+            wp = WorkoutPlan.findById(new ObjectId(id));
             if (wp != null && wp.userName.equals(idToken.getName())) {
                 wp.delete();
             } else {
@@ -69,15 +75,13 @@ public class WorkoutPlanResource {
         } catch(IllegalArgumentException e) {
             throw new NotFoundException(String.format("You do not have workout plan with id %s", id),e);
         }
-        return Response.ok().build();
+        return Response.ok(wp).build();
     }
 
     @GET
     @Path("/search/{name}")
     public List<WorkoutPlan> search(@PathParam("name") String name) {
-        System.out.println(name+ " "+idToken.getName());
-        name=name.toLowerCase();
-        return WorkoutPlan.list("name = :name and userName = :userName", Parameters.with("name", name).and("userName", idToken.getName()).map());
+        return WorkoutPlan.list("name = ?1 and userName = ?2", name, idToken.getName());
     }
 
     @GET
@@ -93,12 +97,5 @@ public class WorkoutPlanResource {
         } catch(IllegalArgumentException e) {
             throw new NotFoundException(String.format("You do not have workout plan with id %s", id), e);
         }
-    }
-
-    @DELETE
-    @Path("/all")
-    public void dropAll(){
-        List<WorkoutPlan> plans = WorkoutPlan.listAll();
-        plans.forEach(plan -> plan.delete());
     }
 }
