@@ -22,6 +22,9 @@ public class NotificationSender
     @ConfigProperty(name = "befit.timezone", defaultValue = "0")
     String timezone;
 
+    @ConfigProperty(name = "quarkus.mailer.mock")
+    String emailMock;
+
     int prevHour = -1,
         prevMin = -1;
 
@@ -29,6 +32,12 @@ public class NotificationSender
     @Scheduled(every="23s")
     void checkTime()
     {
+        if (emailMock == null || emailMock.equals("true"))
+        {
+            Log.warn("Email mock is enabled, no emails will be sent! "
+                    + "To disable, set BEFIT_MOCK_EMAIL=false");
+        }
+
         TimeZone tz = TimeZone.getTimeZone(timezone);
 
         int currentHour = Calendar.getInstance(tz).get(Calendar.HOUR_OF_DAY),

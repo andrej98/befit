@@ -1,7 +1,6 @@
 package io.befit;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 import io.quarkus.mailer.Mail;
