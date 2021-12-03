@@ -1,22 +1,27 @@
 package org.acme.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.acme.enums.AmountType;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import java.time.LocalDate;
 
 @Entity
 public class ExerciseRecord extends PanacheEntity {
-    public String authorName;
     public String exerciseName;
-    public LocalDate date;
     public Integer amount;
     public AmountType amountType;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    public PlanRecord planRecord;
 
     @Override
     public String toString() {
-        return "Record{" + exerciseName + ": " + amount + "}";
+        return "ExerviseRecord{" +
+                "exercise=" + exerciseName + ", " + 
+                "amout=" + amount + ", " + 
+                "amountType=" + amountType + "}";
     }
 }
