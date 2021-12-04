@@ -7,12 +7,14 @@ services:
       context: notification-service/
       dockerfile: src/main/docker/Dockerfile.jvm
     environment:
-      - BEFIT_MOCK_EMAIL=true  # change this to false if you want to be able to actually use the email and send messages
+      # change this to false if you want to be able to actually use the email and send messages
+      - BEFIT_MOCK_EMAIL=true
       - QUARKUS_MAILER_FROM=${BEFIT_EMAIL_USER}
       - QUARKUS_MAILER_USERNAME=${BEFIT_EMAIL_USER}
       - QUARKUS_MAILER_PASSWORD=${BEFIT_EMAIL_PASSWORD}
-    ports:
-      - "8082:8082"
+    # ports:
+    #   - "8082:8082"
+    network_mode: host
     depends_on:
       - postgres
 
@@ -20,8 +22,9 @@ services:
     build:
       context: record-service/
       dockerfile: src/main/docker/Dockerfile.jvm
-    ports:
-      - "8081:8081"
+    # ports:
+    #   - "8081:8081"
+    network_mode: host
     depends_on:
       - postgres
 
@@ -29,8 +32,9 @@ services:
     build:
       context: workout-service/
       dockerfile: src/main/docker/Dockerfile.jvm
-    ports:
-      - "8080:8080"
+    # ports:
+    #   - "8080:8080"
+    network_mode: host
     depends_on:
       - mongo
 
