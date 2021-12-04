@@ -6,6 +6,8 @@ import javax.validation.Valid;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -52,15 +54,21 @@ public class NotificationResource
     @DELETE
     @Path("/delete/{id}")
     @Transactional
-    public Response deleteScheduled(@PathParam("id") Long id)
+    public ScheduledRecord deleteScheduled(@PathParam("id") Long id)
     {
-        var record = ScheduledRecord.findById(id);
-        if (record == null)
+        ScheduledRecord deleted = ScheduledRecord.findById(id);
+
+        if (deleted == null)
         {
-            return Response.status(Status.NOT_FOUND).build();
+            throw new NotFoundException("Nonexistent id: " + id);
         }
-        ScheduledRecord.deleteById(id);
-        return Response.noContent().build();
+
+        if (!ScheduledRecord.deleteById(id))
+            throw new InternalServerErrorException(
+                    "Something strange happened "
+                    + " while deleting scheduled record: " + id);
+
+        return deleted;
     }
 
     @DELETE
@@ -71,6 +79,7 @@ public class NotificationResource
         if (email == null)
         {
             throw new BadRequestException("Email is empty");
+            // return Response.status(Status.BAD_REQUEST).build();
         }
 
         var query = new StringBuilder()
