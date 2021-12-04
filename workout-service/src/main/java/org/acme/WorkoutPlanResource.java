@@ -1,15 +1,15 @@
 package org.acme;
 
 import io.quarkus.oidc.IdToken;
-import io.quarkus.panache.common.Parameters;
 import org.bson.types.ObjectId;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
 import java.util.List;
 
 @Path("/workout-plans")
@@ -19,11 +19,15 @@ public class WorkoutPlanResource {
     @IdToken
     JsonWebToken idToken;
 
+    @Counted(name = "workoutplan.getall.counter", description = "How many times was getAll() called.")
+    @Timed(name = "workoutplan.getall.timer", unit = MetricUnits.MILLISECONDS)
     @GET
     public List<WorkoutPlan> getAll() {
         return WorkoutPlan.getAllFromUser(idToken.getName());
     }
 
+    @Counted(name = "workoutplan.create.counter", description = "How many plans were created.")
+    @Timed(name = "workoutplan.create.timer", unit = MetricUnits.MILLISECONDS)
     @POST
     public Response create(WorkoutPlan plan) {
         plan.userName = idToken.getName();
@@ -61,6 +65,8 @@ public class WorkoutPlanResource {
         return Response.status(Response.Status.OK).entity(updatedPlan).build();
     }
 
+    @Counted(name = "workoutplan.delete.counter", description = "How many plans were deleted.")
+    @Timed(name = "workoutplan.delete.timer", unit = MetricUnits.MILLISECONDS)
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") String id) {
