@@ -1,6 +1,8 @@
 package io.befit;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.h2.H2DatabaseTestResource;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -15,6 +17,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.hasItem;
 
 @QuarkusTest
+@QuarkusTestResource(H2DatabaseTestResource.class)
 public class NotificationResourceTest
 {
     @Test
