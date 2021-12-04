@@ -14,6 +14,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.eclipse.microprofile.metrics.MetricUnits;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
+
 import io.quarkus.panache.common.Parameters;
 
 import javax.ws.rs.Produces;
@@ -25,6 +29,11 @@ public class NotificationResource
 {
     static ScheduledTimeDTO DEFAULT_TIME = new ScheduledTimeDTO(18, 0);
 
+    @Counted(name = "getScheduled.counter",
+             description = "How many times notifications were listed")
+    @Timed(name = "getScheduled.timer",
+           description = "Time it takes to list notifications",
+           unit = MetricUnits.MILLISECONDS)
     @GET
     @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,6 +59,8 @@ public class NotificationResource
                 .list();
     }
 
+    @Counted(name = "deleteScheduled.counter",
+             description = "How many times notifications were deleted")
     @DELETE
     @Path("/delete/{id}")
     @Transactional
@@ -70,6 +81,11 @@ public class NotificationResource
         return deleted;
     }
 
+    @Counted(name = "purge.counter",
+             description = "How many times notifications were purged")
+    @Timed(name = "purge.timer",
+           description = "Time it takes to purge all notifications by given email",
+           unit = MetricUnits.MILLISECONDS)
     @DELETE
     @Path("/purge/{email}")
     @Transactional
@@ -91,6 +107,8 @@ public class NotificationResource
     }
 
 
+    @Counted(name = "createScheduled.counter",
+             description = "How many times notifications were created")
     @POST
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
