@@ -1,16 +1,11 @@
 package io.befit;
 
-import io.quarkus.panache.common.Parameters;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 
 import javax.ws.rs.core.Response;
-
-import static java.util.Map.entry;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
