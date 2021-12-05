@@ -12,7 +12,7 @@ This app helps users to track their fitness. There are three main functionalitie
 
 3. Users can subscribe to notifications, to be reminded that they are supposed to exercise. The notifications are delivered via email.
 
-## Mikroservices
+## Microservices
 
 These three functionalities are split into three microservices.
 
@@ -51,13 +51,44 @@ Additionally, if one wants to use Grafana, the url for Prometheus should be set 
 
 1. **Description of the project:** ...
 
-1. **Story/scenario of usage:** ...
+2. **Story/scenario of usage:**
 
-1. **Why you think a microservice architecture can be appropriate:** ...
+    - User creates a workout plan _“Workout Routine 1”_ consisting of
+    exercises _“Running, Planking, Pushups”_ and daily frequency
 
-1. **Benefits of the using microservices in this project:** ...
+    - On Monday, User records that they have _run_ for `3km`, _planked_
+    for `74s` and done `30` _pushups_
 
-1. **Drawbacks of microservices in this case:** ...
+    - On Tuesday, User records that they have _run_ for `0km`, _planked_
+    for `20s` and done `10` _pushups_
+
+    - On Wednesday, User forgets to workout and doesn't record any exercise
+
+    - Next day, User sets up optional daily notifications at _17:05_ in order
+    not to forget again
+
+    - On Friday, User receives an e-mail from `befit.notify@gmail.com` that
+    they should do their _“Workout Routine 1”_
+
+3. **Why you think a microservice architecture can be appropriate:**
+
+    - Because there doesn't need to be much interaction between users,
+    that makes the whole system easier to split into multiple closed units.
+    Each feature of the system can be represented as a standalone microservice
+    calling other microservices when needed. User then accesses the
+    microservice that gives them the functionality they currently need.
+
+4. **Benefits of the using microservices in this project:**
+
+    - Ease of development: each student can take care of their own microservice
+    and not be bothered with others intervening on their work.
+
+5. **Drawbacks of microservices in this case:**
+
+    - For some parts of the system it would be more intuitive to make them
+    as a monolith – namely `workout service` and `record service`, because
+    these two have to communicate frequently to provide the desired
+    functionality.
 
 ## Scenario
 
