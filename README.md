@@ -51,7 +51,7 @@ For managing users we use _keycloak_. There are three user accounts that can be 
 
 To logout use one of the following URLs:
  - http://localhost:8080/logout
- - http://localhost:8080/logout
+ - http://localhost:8082/logout
 
 
 ## Deployment
