@@ -1,6 +1,6 @@
 # befit
 
-befit is a revolutionary new fitness tracking application that will help you unlock your potential and take your fitness to the next level. Do you want to have the perfect beach body? Do you want all your friends to envy you? Do you want to acquire the peak of human form? Then this app is for you!
+befit is a revolutionary new fitness tracking application that will help you unlock your potential and take your fitness to the next level. Do you want to have the perfect beach body? Do you want all your friends to envy you? Do you want to reach the peak of human form? Then this app is for you!
 
 ## Description
 
