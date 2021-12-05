@@ -33,7 +33,7 @@ These three functionalities are split into three microservices.
 
 ## Deployment
 
-#### Linux
+### Linux
 
 ```bash
 cd befit
@@ -41,7 +41,11 @@ mvn clean package
 docker-compose -f docker-compose.yml build
 docker-compose -f docker-compose.yml up
 ```
+### Windows
 
+On windows it is not possible to run the main services in docker containers. The only option is to run the supporting services using `docker-compose-dev-win.yml` and then run each service individually either in dev mode or start it from the target folder (but they shouldn't be started in a container). 
+
+Additionally, if one wants to use Grafana, the url for Prometheus should be set to `host.docker.internal:9090`.
 
 ## Project description
 
