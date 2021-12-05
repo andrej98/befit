@@ -14,22 +14,45 @@ This app helps users to track their fitness. There are three main functionalitie
 
 ## Microservices
 
-These three functionalities are split into three microservices.
+There are three microservices: the main one is `workout-service` and the remaining two are `notification-service` and `record-service`. Only `workout-service` and `notification-service` are "front-facing", meaning they can be used directly through the swagger-ui. `record-service` has swagger-ui as well, but it is harder to use. As it is a "backend" service it doesn't redirect the user to a login screen and one must first obtain an access token through another service. This is practically possible only in dev mode. More on this [here](#record-service).
 
-- `workout-service`: http://localhost:8080/
-- `record-service`: http://localhost:8081/
-- `notification-service`: http://localhost:8082/
+### workout-service
+ - url: http://localhost:8080/
+ - Swagger-ui: http://localhost:8080/q/swagger-ui/
+
+### notification service
+ - url: http://localhost:8082/
+ - Swagger-ui: http://localhost:8082/q/swagger-ui/
+
+### record-service
+ - url: http://localhost:8082/
+ - Swagger-ui: http://localhost:8082/q/swagger-ui/
+
+To use the swagger-ui, one most provide it with an access token. To do that start the `workout-service` service in dev mode and perform these steps:
+
+TODO
 
 ### Additional
 
 - Prometheus: http://localhost:9090/
 - Grafana: http://localhost:3000/
+- Jaeger: http://localhost:16686/
+- Keycloak administration: http://localhost:8180/ 
 
-### Swagger-UI
+### Keycloak
 
-- `workout-service`: http://localhost:8080/q/swagger-ui/
-- `record-service`: http://localhost:8081/q/swagger-ui/
-- `notification-service`: http://localhost:8082/q/swagger-ui/
+For managing users we use _keycloak_. There are three user accounts that can be used. It is also possible to register as a new user on the login screen.
+
+| **Username**   | **Password** |  **Roles**    |
+|:--             |:--           |:--            |
+| alice          | alice        | user          |
+| jdoe           | jdoe         | user          |
+| admin          | admin        | user, admin   |
+
+To logout use one of the following URLs:
+ - http://localhost:8080/logout
+ - http://localhost:8080/logout
+
 
 ## Deployment
 
@@ -41,6 +64,19 @@ mvn clean package
 docker-compose -f docker-compose.yml build
 docker-compose -f docker-compose.yml up
 ```
+
+Or to use the services in dev mode, first start the supporting services
+
+```bash
+docker-compose -f docker-compose-dev.yml up
+```
+
+And then enter the root directory of each service and run
+
+```
+./mvnw clean compile quarkus:dev
+```
+
 ### Windows
 
 On windows it is not possible to run the main services in docker containers. The only option is to run the supporting services using `docker-compose-dev-win.yml` and then run each service individually either in dev mode or start it from the target folder (but they shouldn't be started in a container). 
