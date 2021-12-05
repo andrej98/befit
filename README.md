@@ -130,7 +130,17 @@ Additionally, if one wants to use Grafana, the url for Prometheus should be set 
 
 1. **Responsiveness:** ...
 
-1. **Resiliency:** ...
+1. **Resiliency:**
+
+    - `record-service` crashes or the network fails
+
+    - User tries to record through the `workout-service` that they did a workout plan
+
+    - `workout-service` is unable to reach the `record-service`
+
+    - `workout-service` retries several times and if `record-service` service comes back it it successfully processes the request
+
+    - if `record-service` is still unreachable `workout-service` fails gracefully and informs user of the error using a fallback implementation
 
 1. **Elasticity:** ...
 
