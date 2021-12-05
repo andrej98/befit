@@ -1,8 +1,20 @@
 # befit
 
-*PV217 PROJECT*
+befit is a revolutionary new fitness tracking application that will help you unlock your potential and take your fitness to the next level. Do you want to have the perfect beach body? Do you want all your friends to envy you? Do you want to acquire the peak of human form? Then this app is for you!
+
+## Description
+
+This app helps users to track their fitness. There are three main functionalities.
+
+1. A user can create workout plans. Each plan consists of one or more exercises and there are four different types of exercises. Depending on the type, the plan also contains an "amount" of the exercise to be done. There can be exercises such as squats which have a certain number of repetitions, exercises like a plank which are performed for a specific time duration, exercises like running which have a distance associated with them and finally one can also specify the number of steps, for example for walking. 
+
+2. It is possible to create a record that a user has performed a workout plan on a given day. These records can then be retrieved and filtered so that the users can see and track their progress. 
+
+3. Users can subscribe to notifications, to be reminded that they are supposed to exercise. The notifications are delivered via email.
 
 ## Mikroservices
+
+These three functionalities are split into three microservices.
 
 - `workout-service`: http://localhost:8080/
 - `record-service`: http://localhost:8081/
