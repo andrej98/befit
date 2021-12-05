@@ -24,6 +24,7 @@ import org.acme.entity.ExerciseRecord;
 import org.acme.entity.PlanRecord;
 import org.acme.mapper.PlanMapper;
 import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
@@ -43,6 +44,7 @@ public class RecordResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
+    @Timed(name="record.create.timer")
     public PlanRecordDTO createRecord(@Valid CreateRecordDTO recordData) {
         PlanRecord record = new PlanRecord();
         record.planName = recordData.planName;
@@ -66,6 +68,7 @@ public class RecordResource {
     @GET
     @RolesAllowed("user")
     @Produces(MediaType.APPLICATION_JSON)
+    @Timed(name="record.get.timer")
     public List<PlanRecordDTO> getAll() {
         return planMapper.toDTO(PlanRecord.list("authorName", jwt.getName()));
     }
@@ -74,6 +77,7 @@ public class RecordResource {
     @Path("/{id}")
     @RolesAllowed("user")
     @Transactional
+    @Timed(name="record.delete.timer")
     public Response deleteRecord(@PathParam long id) {
         PlanRecord record = PlanRecord.findById(id);
         
