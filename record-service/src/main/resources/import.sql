@@ -1,21 +1,27 @@
 
 INSERT INTO PlanRecord(id, planName, authorName, date)
-VALUES (111, 'planName', 'authorName', '2012-02-01');
+VALUES (111, 'None', 'alice', '2012-12-03');
 
 INSERT INTO ExerciseRecord(id, exerciseName, amount, amountType, planrecord_id)
-VALUES (1, 'pushups', 1, 0, 111);
+VALUES (1, 'pushups', 10, 1, 111);
 
 INSERT INTO ExerciseRecord(id, exerciseName, amount, amountType, planrecord_id)
-VALUES (2, 'pushups', 2, 0, 111);
+VALUES (2, 'squats', 20, 1, 111);
+
+INSERT INTO PlanRecord(id, planName, authorName, date)
+VALUES (20, 'None', 'alice', '2012-12-04');
 
 INSERT INTO ExerciseRecord(id, exerciseName, amount, amountType, planrecord_id)
-VALUES (3, 'pushups', 3, 0, 111);
+VALUES (3, 'pushups', 3, 1, 20);
 
 INSERT INTO ExerciseRecord(id, exerciseName, amount, amountType, planrecord_id)
-VALUES (4, 'pushups', 4, 0, 111);
+VALUES (4, 'squats', 4, 1, 20);
+
+INSERT INTO PlanRecord(id, planName, authorName, date)
+VALUES (3, 'Chest plan', 'alice', '2012-12-05');
 
 INSERT INTO ExerciseRecord(id, exerciseName, amount, amountType, planrecord_id)
-VALUES (5, 'pushups', 20, 0, 111);
+VALUES (5, 'pushups', 25, 1, 3);
 
 INSERT INTO ExerciseRecord(id, exerciseName, amount, amountType, planrecord_id)
-VALUES (6, 'pushups', 5, 0, 111);
+VALUES (6, 'benchpress', 10, 1, 3);
