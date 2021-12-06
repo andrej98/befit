@@ -95,7 +95,6 @@ public class RecordResource {
 
     @GET
     @Retry(maxRetries = 4)
-    @Fallback(fallbackMethod = "getStatsFallback")
     @Path("/stats")
     @Produces(MediaType.APPLICATION_SVG_XML)
     public String getStats(@QueryParam("from") String fromString,
@@ -104,7 +103,7 @@ public class RecordResource {
     {
         var param = new StatsServiceDTO();
         param.values = new ArrayList<Integer>();
-        param.name = planName;
+        param.name = planName == null ? "" : planName;
 
         LocalDate from = parseDate(fromString); 
         LocalDate to = parseDate(toString);
@@ -201,13 +200,6 @@ public class RecordResource {
     private List<PlanRecordDTO> recordServiceFallback(String fromString, String toString, String planName) {
         throw new ServiceUnavailableException(Response.status(Status.SERVICE_UNAVAILABLE)
                 .entity("Record service is not available.")
-                .type(MediaType.TEXT_PLAIN)
-                .build());
-    }
-
-    public String getStatsFallback(String fromString, String toString, String planName) {
-        throw new ServiceUnavailableException(Response.status(Status.SERVICE_UNAVAILABLE)
-                .entity("Stats service is not available.")
                 .type(MediaType.TEXT_PLAIN)
                 .build());
     }
