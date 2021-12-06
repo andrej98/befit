@@ -38,7 +38,7 @@ public class AppLifecycleBean {
         days1.add(DayOfWeek.MONDAY);
         days1.add(DayOfWeek.WEDNESDAY);
         WorkoutPlan workoutPlan2 = new WorkoutPlan("Cardio",exercises1, days1, "alice");
-        workoutPlan.persist();
+        workoutPlan2.persist();
     }
 
     void onStop(@Observes ShutdownEvent ev) {
