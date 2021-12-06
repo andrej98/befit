@@ -3,6 +3,7 @@ FROM ubuntu:20.04
 ENV LANG='C'
 
 RUN apt update \
+    && apt install -y zlib1g-dev \
     && apt install -y ghc cabal-install \
     && mkdir /deployments \
     && chown 1001 /deployments
