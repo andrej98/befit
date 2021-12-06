@@ -7,6 +7,8 @@ RUN apt update \
     && mkdir /deployments \
     && chown 1001 /deployments
 
+ENV PATH=~/.cabal/bin:$PATH
+
 RUN cabal update
 RUN cabal --force-reinstalls install aeson
 RUN cabal --force-reinstalls install svg-builder

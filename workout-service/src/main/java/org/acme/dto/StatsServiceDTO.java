@@ -4,6 +4,6 @@ import java.util.List;
 
 public class StatsServiceDTO {
 
-    public List<Integer> amount;
+    public List<Integer> values;
     public String name;
 }

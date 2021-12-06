@@ -11,6 +11,6 @@ DATA='
 
 curl -iw "\n" \
     --header "Content-Type: application/json" \
-    --request GET \
+    --request POST \
     --data "$DATA" \
     http://localhost:8084/stats

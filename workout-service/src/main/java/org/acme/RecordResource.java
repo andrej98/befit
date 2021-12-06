@@ -78,13 +78,41 @@ public class RecordResource {
 
     @GET
     @Path("/stats")
-    // @Retry(maxRetries = 4)
     @Produces(MediaType.APPLICATION_SVG_XML)
     public String getStats(@QueryParam("from") String fromString,
                             @QueryParam("to") String toString,
                             @QueryParam("plan") String planName)
     {
         var param = new StatsServiceDTO();
+        param.values = new ArrayList<Integer>();
+        param.name = planName;
+
+        LocalDate from = parseDate(fromString); 
+        LocalDate to = parseDate(toString);
+
+        Stream<PlanRecordDTO> records = recordServiceClient.getAll().stream();
+
+        if (planName != null) {
+            records = records.filter(r -> r.planName.equals(planName));
+        }
+        if (from != null) {
+            records = records.filter(r -> r.date.isAfter(from) || r.date.isEqual(from));
+        }
+        if (to != null) {
+            records = records.filter(r -> r.date.isBefore(to) || r.date.isEqual(to));
+        }
+
+        List<PlanRecordDTO> listRecords = records.collect(Collectors.toList());
+
+        // whatever
+        // TODO: turn this into something some sensible
+        for (var rec : listRecords) {
+            param.values.add(rec.exercises
+                    .stream()
+                    .mapToInt(ex -> ex.amount)
+                    .sum());
+        }
+
         return statsServiceClient.getStats(param);
     }
 

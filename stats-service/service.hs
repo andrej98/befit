@@ -26,7 +26,7 @@ import Graphics.Svg
 import Happstack.Server ( toResponseBS, takeRequestBody, unBody, askRq,
                           Conf(..), simpleHTTP, dir, ok, badRequest, Response,
                           Request, ServerPart, ServerPartT, logMAccess,
-                          notFound, toResponse, method, Method(GET) )
+                          notFound, toResponse, method, Method(GET, POST) )
 
 
 -- # Helper functions
@@ -117,7 +117,7 @@ stats = msum
     ]
     where
         normal = do
-            method GET
+            method POST
             jsonData <- askJsonRaw
             case eitherDecode <$> jsonData :: Maybe (Either String Params) of
                 Nothing -> badRequest
