@@ -28,6 +28,10 @@ There are three microservices: the main one is `workout-service` and the remaini
  - url: http://localhost:8082/
  - Swagger-ui: http://localhost:8082/q/swagger-ui/
 
+### stats-service
+ - url: http://localhost:8084/
+ - REST-API: [README.md](stats-service/README.md)
+
 To use the swagger-ui, one most provide it with an access token. To do that start the `workout-service` service in dev mode and perform these steps:
 
 TODO

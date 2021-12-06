@@ -15,10 +15,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.acme.clients.RecordServiceClient;
+import org.acme.clients.StatsServiceClient;
 import org.acme.dto.NewRecordDTO;
 import org.acme.dto.ExerciseRecordDTO;
 import org.acme.dto.NewExerciseRecordDTO;
 import org.acme.dto.PlanRecordDTO;
+import org.acme.dto.StatsServiceDTO;
 import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -38,6 +40,10 @@ public class RecordResource {
     @Inject
     @RestClient
     RecordServiceClient recordServiceClient;
+
+    @Inject
+    @RestClient
+    StatsServiceClient statsServiceClient;
 
     @POST
     @Retry(maxRetries = 4)
@@ -84,6 +90,49 @@ public class RecordResource {
         planDTO.date = recordDto.date == null ? LocalDate.now() : recordDto.date;
         planDTO.exercises = recordDto.exercises;
         return recordServiceClient.createRecord(planDTO);
+    }
+
+
+    @GET
+    @Retry(maxRetries = 4)
+    @Fallback(fallbackMethod = "getStatsFallback")
+    @Path("/stats")
+    @Produces(MediaType.APPLICATION_SVG_XML)
+    public String getStats(@QueryParam("from") String fromString,
+                            @QueryParam("to") String toString,
+                            @QueryParam("plan") String planName)
+    {
+        var param = new StatsServiceDTO();
+        param.values = new ArrayList<Integer>();
+        param.name = planName;
+
+        LocalDate from = parseDate(fromString); 
+        LocalDate to = parseDate(toString);
+
+        Stream<PlanRecordDTO> records = recordServiceClient.getAll().stream();
+
+        if (planName != null) {
+            records = records.filter(r -> r.planName.equals(planName));
+        }
+        if (from != null) {
+            records = records.filter(r -> r.date.isAfter(from) || r.date.isEqual(from));
+        }
+        if (to != null) {
+            records = records.filter(r -> r.date.isBefore(to) || r.date.isEqual(to));
+        }
+
+        List<PlanRecordDTO> listRecords = records.collect(Collectors.toList());
+
+        // whatever
+        // TODO: turn this into something some sensible
+        for (var rec : listRecords) {
+            param.values.add(rec.exercises
+                    .stream()
+                    .mapToInt(ex -> ex.amount)
+                    .sum());
+        }
+
+        return statsServiceClient.getStats(param);
     }
 
 
@@ -152,6 +201,13 @@ public class RecordResource {
     private List<PlanRecordDTO> recordServiceFallback(String fromString, String toString, String planName) {
         throw new ServiceUnavailableException(Response.status(Status.SERVICE_UNAVAILABLE)
                 .entity("Record service is not available.")
+                .type(MediaType.TEXT_PLAIN)
+                .build());
+    }
+
+    public String getStatsFallback(String fromString, String toString, String planName) {
+        throw new ServiceUnavailableException(Response.status(Status.SERVICE_UNAVAILABLE)
+                .entity("Stats service is not available.")
                 .type(MediaType.TEXT_PLAIN)
                 .build());
     }
