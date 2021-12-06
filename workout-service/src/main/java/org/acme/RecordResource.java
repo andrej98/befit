@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response.Status;
 import org.acme.clients.RecordServiceClient;
 import org.acme.dto.NewRecordDTO;
 import org.acme.dto.ExerciseRecordDTO;
+import org.acme.dto.NewExerciseRecordDTO;
 import org.acme.dto.PlanRecordDTO;
 import org.eclipse.microprofile.faulttolerance.Fallback;
 import org.eclipse.microprofile.faulttolerance.Retry;
@@ -41,7 +43,7 @@ public class RecordResource {
     @Retry(maxRetries = 4)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public PlanRecordDTO createRecord(NewRecordDTO recordDto) {
+    public PlanRecordDTO createRecord(@Valid NewRecordDTO recordDto) {
         PlanRecordDTO planDTO = new PlanRecordDTO();
         planDTO.authorName = jwt.getName();
         planDTO.planName = recordDto.planName;
@@ -66,6 +68,21 @@ public class RecordResource {
             planDTO.exercises.add(e);
         }
 
+        return recordServiceClient.createRecord(planDTO);
+    }
+
+
+    @POST
+    @Path("/exercises")
+    @Retry(maxRetries = 4)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public PlanRecordDTO createExerciseRecord(@Valid NewExerciseRecordDTO recordDto) {
+        PlanRecordDTO planDTO = new PlanRecordDTO();
+        planDTO.authorName = jwt.getName();
+        planDTO.planName = "None";
+        planDTO.date = recordDto.date == null ? LocalDate.now() : recordDto.date;
+        planDTO.exercises = recordDto.exercises;
         return recordServiceClient.createRecord(planDTO);
     }
 
@@ -132,11 +149,7 @@ public class RecordResource {
         }
     }
 
-    private List<PlanRecordDTO> recordServiceFallback(
-            @QueryParam("from") String fromString,
-            @QueryParam("to") String toString,
-            @QueryParam("plan") String planName) {
-
+    private List<PlanRecordDTO> recordServiceFallback(String fromString, String toString, String planName) {
         throw new ServiceUnavailableException(Response.status(Status.SERVICE_UNAVAILABLE)
                 .entity("Record service is not available.")
                 .type(MediaType.TEXT_PLAIN)
