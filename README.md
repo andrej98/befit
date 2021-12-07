@@ -14,8 +14,7 @@ This app helps users to track their fitness. There are three main functionalitie
 
 ## Microservices
 
-There are three microservices: the main one is `workout-service` and the remaining two are `notification-service` and `record-service`. Only `workout-service` and `notification-service` are "front-facing", meaning they can be used directly through the swagger-ui. `record-service` has swagger-ui as well, but it is harder to use. As it is a "backend" service it doesn't redirect the user to a login screen and one must first obtain an access token through another service. This is practically possible only in dev mode. More on this [here](#record-service).
-
+There are four microservices: the main one is `workout-service` and the remaining are `notification-service`, `record-service` and `stats-service`. Only `workout-service` and `notification-service` are "front-facing", meaning they can be used directly through the swagger-ui. `record-service` has swagger-ui as well, but it is harder to use. As it is a "backend" service it doesn't redirect the user to a login screen and one must first obtain an access token through another service and paste into the swagger-ui. Unlike the other services the `stats-service` is implemented in haskell so it doesn't provide any swagger-ui. It is used for creating a simple bar graph to visualize the exercise records. 
 ### workout-service
  - url: http://localhost:8080/
  - Swagger-ui: http://localhost:8080/q/swagger-ui/
