@@ -2,6 +2,12 @@ version: "3.8"
 
 services:
 
+  stats-service:
+    build:
+      context: stats-service/
+      dockerfile: Dockerfile
+    network_mode: host
+
   notification-service:
     build:
       context: notification-service/

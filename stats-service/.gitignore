@@ -3,3 +3,8 @@
 *.o
 *.hi
 
+# cabal build files
+
+dist/
+dist-newstyle/
+
